@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marketplace - Elegant AV Solution</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="navbar">
+            <div class="nav-logo">
+                <a href="INDEX.HTML">
+                    <div class="logo"></div>
+                </a>
+            </div>
+            <nav class="nav-links">
+                <a href="INDEX.HTML" class="border">Home</a>
+                <a href="INDEX.HTML#about" class="border">About</a>
+                <a href="INDEX.HTML#services" class="border">Services</a>
+                <a href="INDEX.HTML#contact" class="border">Contact</a>
+                <a href="login.html" class="border">Login</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="marketplace-container">
+        <div class="marketplace-header">
+            <h1>AV Equipment Marketplace</h1>
+            <div class="marketplace-actions">
+                <button class="sell-button" onclick="showSellForm()">
+                    <i class="fas fa-plus"></i> Sell Equipment
+                </button>
+                <div class="search-box">
+                    <input type="text" placeholder="Search equipment...">
+                    <button><i class="fas fa-search"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <div class="marketplace-filters">
+            <select>
+                <option value="">All Categories</option>
+                <option value="audio">Audio Equipment</option>
+                <option value="video">Video Equipment</option>
+                <option value="lighting">Lighting</option>
+                <option value="accessories">Accessories</option>
+            </select>
+            <select>
+                <option value="">Price Range</option>
+                <option value="0-1000">Under $1,000</option>
+                <option value="1000-5000">$1,000 - $5,000</option>
+                <option value="5000+">Over $5,000</option>
+            </select>
+            <select>
+                <option value="">Condition</option>
+                <option value="new">New</option>
+                <option value="used">Used</option>
+                <option value="refurbished">Refurbished</option>
+            </select>
+        </div>
+
+        <div class="marketplace-grid">
+            <!-- Sample Product Cards -->
+            <div class="product-card">
+                <img src="elegant logo.jpg" alt="Product">
+                <div class="product-info">
+                    <h3>Professional Microphone</h3>
+                    <p class="price">$299.99</p>
+                    <p class="condition">New</p>
+                    <button class="buy-button">Buy Now</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <img src="elegant logo.jpg" alt="Product">
+                <div class="product-info">
+                    <h3>HD Camera</h3>
+                    <p class="price">$1,499.99</p>
+                    <p class="condition">Used</p>
+                    <button class="buy-button">Buy Now</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <img src="elegant logo.jpg" alt="Product">
+                <div class="product-info">
+                    <h3>LED Panel</h3>
+                    <p class="price">$799.99</p>
+                    <p class="condition">New</p>
+                    <button class="buy-button">Buy Now</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sell Form Modal -->
+    <div id="sell-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>List Your Equipment</h2>
+            <form class="sell-form">
+                <div class="form-group">
+                    <label>Equipment Name</label>
+                    <input type="text" required>
+                </div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <select required>
+                        <option value="">Select Category</option>
+                        <option value="audio">Audio Equipment</option>
+                        <option value="video">Video Equipment</option>
+                        <option value="lighting">Lighting</option>
+                        <option value="accessories">Accessories</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Price</label>
+                    <input type="number" required>
+                </div>
+                <div class="form-group">
+                    <label>Condition</label>
+                    <select required>
+                        <option value="">Select Condition</option>
+                        <option value="new">New</option>
+                        <option value="used">Used</option>
+                        <option value="refurbished">Refurbished</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Images</label>
+                    <input type="file" multiple accept="image/*">
+                </div>
+                <button type="submit" class="auth-button">List Equipment</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function showSellForm() {
+            document.getElementById('sell-modal').style.display = 'block';
+        }
+
+        // Close modal when clicking the X or outside the modal
+        document.querySelector('.close').onclick = function() {
+            document.getElementById('sell-modal').style.display = 'none';
+        }
+        window.onclick = function(event) {
+            if (event.target == document.getElementById('sell-modal')) {
+                document.getElementById('sell-modal').style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html> 

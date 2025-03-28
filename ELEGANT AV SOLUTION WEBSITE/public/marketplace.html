@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Marketplace - Elegant AV Solution</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" type="image/x-icon" href="elegant logo.jpg">
+</head>
+<body>
+    <header>
+        <div class="navbar">
+            <div class="nav-logo">
+                <a href="INDEX.HTML">
+                    <div class="logo"></div>
+                </a>
+            </div>
+            <nav class="nav-links">
+                <a href="INDEX.HTML" class="border">Home</a>
+                <a href="INDEX.HTML#about" class="border">About</a>
+                <a href="INDEX.HTML#services" class="border">Services</a>
+                <a href="marketplace.html" class="border">Marketplace</a>
+                <a href="INDEX.HTML#contact" class="border">Contact</a>
+                <div class="user-menu">
+                    <a href="#" id="userMenu" class="border">
+                        <i class="fas fa-user"></i>
+                        <span id="userName">Login</span>
+                    </a>
+                    <div id="userDropdown" class="user-dropdown">
+                        <a href="#" id="profileLink">My Profile</a>
+                        <a href="#" id="myListingsLink">My Listings</a>
+                        <a href="#" id="logoutLink">Logout</a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <div class="marketplace-container">
+        <div class="marketplace-header">
+            <h1>AV Equipment Marketplace</h1>
+            <div class="marketplace-actions">
+                <div class="sell-section">
+                    <button class="sell-button" onclick="handleSellClick()" id="sellButton">
+                        <i class="fas fa-plus"></i> Sell Equipment
+                    </button>
+                    <p class="login-prompt" id="loginPrompt">Please login to sell equipment</p>
+                </div>
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Search equipment...">
+                    <button onclick="searchProducts()"><i class="fas fa-search"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <div class="marketplace-filters">
+            <select id="categoryFilter" onchange="filterProducts()">
+                <option value="">All Categories</option>
+                <option value="audio">Audio Equipment</option>
+                <option value="video">Video Equipment</option>
+                <option value="lighting">Lighting</option>
+                <option value="accessories">Accessories</option>
+            </select>
+            <select id="priceFilter" onchange="filterProducts()">
+                <option value="">Price Range</option>
+                <option value="0-1000">Under $1,000</option>
+                <option value="1000-5000">$1,000 - $5,000</option>
+                <option value="5000+">Over $5,000</option>
+            </select>
+            <select id="conditionFilter" onchange="filterProducts()">
+                <option value="">Condition</option>
+                <option value="new">New</option>
+                <option value="used">Used</option>
+                <option value="refurbished">Refurbished</option>
+            </select>
+        </div>
+
+        <div class="marketplace-grid" id="productsGrid">
+            <!-- Products will be loaded here dynamically -->
+        </div>
+    </div>
+
+    <!-- Sell Form Modal -->
+    <div id="sell-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>List Your Equipment</h2>
+            <form class="sell-form" id="sellForm">
+                <div class="form-group">
+                    <label>Equipment Name</label>
+                    <input type="text" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <select name="category" required>
+                        <option value="">Select Category</option>
+                        <option value="audio">Audio Equipment</option>
+                        <option value="video">Video Equipment</option>
+                        <option value="lighting">Lighting</option>
+                        <option value="accessories">Accessories</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Price</label>
+                    <input type="number" name="price" required>
+                </div>
+                <div class="form-group">
+                    <label>Condition</label>
+                    <select name="condition" required>
+                        <option value="">Select Condition</option>
+                        <option value="new">New</option>
+                        <option value="used">Used</option>
+                        <option value="refurbished">Refurbished</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea name="description" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Images</label>
+                    <input type="file" name="images" multiple accept="image/*" required>
+                </div>
+                <button type="submit" class="auth-button">List Equipment</button>
+            </form>
+        </div>
+    </div>
+
+    <style>
+    .sell-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .sell-button {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 4px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 1rem;
+        transition: all 0.3s;
+        min-width: 200px;
+        justify-content: center;
+    }
+
+    .sell-button:hover {
+        background-color: #45a049;
+        transform: translateY(-2px);
+    }
+
+    .sell-button.disabled {
+        background-color: #cccccc;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    .login-prompt {
+        color: #666;
+        font-size: 0.9rem;
+        display: none;
+    }
+
+    .login-prompt.show {
+        display: block;
+    }
+    </style>
+
+    <script>
+    // User menu functionality
+    document.getElementById('userMenu').addEventListener('click', function(e) {
+        e.preventDefault();
+        const dropdown = document.getElementById('userDropdown');
+        dropdown.classList.toggle('show');
+    });
+
+    // Close dropdown when clicking outside
+    window.addEventListener('click', function(e) {
+        const dropdown = document.getElementById('userDropdown');
+        const userMenu = document.getElementById('userMenu');
+        if (!userMenu.contains(e.target) && dropdown.classList.contains('show')) {
+            dropdown.classList.remove('show');
+        }
+    });
+
+    // Logout functionality
+    document.getElementById('logoutLink').addEventListener('click', function(e) {
+        e.preventDefault();
+        localStorage.removeItem('token');
+        window.location.href = 'INDEX.HTML';
+    });
+
+    // Profile link functionality
+    document.getElementById('profileLink').addEventListener('click', function(e) {
+        e.preventDefault();
+        alert('Profile page coming soon!');
+    });
+
+    // My Listings link functionality
+    document.getElementById('myListingsLink').addEventListener('click', function(e) {
+        e.preventDefault();
+        loadMyListings();
+    });
+
+    // Load user's listings
+    async function loadMyListings() {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            alert('Please login to view your listings');
+            window.location.href = 'login.html';
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/products/my-listings', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            const products = await response.json();
+            displayProducts(products);
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Failed to load your listings. Please try again.');
+        }
+    }
+
+    // Update checkAuth function
+    function checkAuth() {
+        const token = localStorage.getItem('token');
+        const sellButton = document.getElementById('sellButton');
+        const loginPrompt = document.getElementById('loginPrompt');
+        
+        if (!token) {
+            document.getElementById('userName').textContent = 'Login';
+            document.getElementById('userMenu').href = 'login.html';
+            sellButton.classList.add('disabled');
+            loginPrompt.classList.add('show');
+            document.getElementById('userDropdown').style.display = 'none';
+        } else {
+            // Fetch user info
+            fetch('/api/auth/user', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('userName').textContent = data.name;
+                document.getElementById('userMenu').href = '#';
+                sellButton.classList.remove('disabled');
+                loginPrompt.classList.remove('show');
+                document.getElementById('userDropdown').style.display = 'block';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                localStorage.removeItem('token');
+                window.location.href = 'login.html';
+            });
+        }
+    }
+
+    // Load products
+    async function loadProducts() {
+        try {
+            const response = await fetch('/api/products');
+            const products = await response.json();
+            displayProducts(products);
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    // Display products
+    function displayProducts(products) {
+        const grid = document.getElementById('productsGrid');
+        grid.innerHTML = products.map(product => `
+            <div class="product-card">
+                <img src="${product.images[0] || 'elegant logo.jpg'}" alt="${product.name}">
+                <div class="product-info">
+                    <h3>${product.name}</h3>
+                    <p class="price">$${product.price.toFixed(2)}</p>
+                    <p class="condition">${product.condition}</p>
+                    <button class="buy-button" onclick="buyProduct('${product._id}')">Buy Now</button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // Filter products
+    function filterProducts() {
+        const category = document.getElementById('categoryFilter').value;
+        const priceRange = document.getElementById('priceFilter').value;
+        const condition = document.getElementById('conditionFilter').value;
+
+        let url = '/api/products?';
+        if (category) url += `category=${category}&`;
+        if (condition) url += `condition=${condition}&`;
+        if (priceRange) {
+            const [min, max] = priceRange.split('-');
+            if (max) {
+                url += `minPrice=${min}&maxPrice=${max}&`;
+            } else {
+                url += `minPrice=${min}&`;
+            }
+        }
+
+        fetch(url)
+            .then(response => response.json())
+            .then(products => displayProducts(products))
+            .catch(error => console.error('Error:', error));
+    }
+
+    // Search products
+    function searchProducts() {
+        const searchTerm = document.getElementById('searchInput').value;
+        fetch(`/api/products?search=${searchTerm}`)
+            .then(response => response.json())
+            .then(products => displayProducts(products))
+            .catch(error => console.error('Error:', error));
+    }
+
+    // Show sell form
+    function showSellForm() {
+        document.getElementById('sell-modal').style.display = 'block';
+    }
+
+    // Close modal
+    document.querySelector('.close').onclick = function() {
+        document.getElementById('sell-modal').style.display = 'none';
+    }
+    window.onclick = function(event) {
+        if (event.target == document.getElementById('sell-modal')) {
+            document.getElementById('sell-modal').style.display = 'none';
+        }
+    }
+
+    // Handle sell form submission
+    document.getElementById('sellForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            alert('Please login to sell equipment');
+            window.location.href = 'login.html';
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/products', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                },
+                body: formData
+            });
+
+            if (response.ok) {
+                alert('Equipment listed successfully!');
+                document.getElementById('sell-modal').style.display = 'none';
+                loadProducts();
+            } else {
+                alert('Failed to list equipment. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred. Please try again.');
+        }
+    });
+
+    // Buy product
+    function buyProduct(productId) {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            alert('Please login to purchase equipment');
+            window.location.href = 'login.html';
+            return;
+        }
+
+        // Implement purchase logic here
+        alert('Purchase functionality coming soon!');
+    }
+
+    // Handle sell button click
+    function handleSellClick() {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            alert('Please login to sell equipment');
+            window.location.href = 'login.html';
+            return;
+        }
+        showSellForm();
+    }
+
+    // Initialize
+    checkAuth();
+    loadProducts();
+    </script>
+</body>
+</html> 
